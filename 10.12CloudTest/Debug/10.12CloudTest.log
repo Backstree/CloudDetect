@@ -1,0 +1,33 @@
+﻿生成启动时间为 2018/11/7 星期三 下午 3:22:28。
+     1>项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IE:\gdal\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt CCompare_IR.cpp
+         CCompare_IR.cpp
+     1>e:\gdal\include\gdal_priv.h(436): warning C4251: “GDALColorTable::aoEntries”: class“std::vector<_Ty>”需要有 dll 接口由 class“GDALColorTable”的客户端使用
+                 with
+                 [
+                     _Ty=GDALColorEntry
+                 ]
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C++\10.12CloudTest\Debug\10.12CloudTest.exe" /INCREMENTAL /NOLOGO /LIBPATH:E:\gdal\lib kernel32.lib gdal_i.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\C++\10.12CloudTest\Debug\10.12CloudTest.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C++\10.12CloudTest\Debug\10.12CloudTest.lib" /MACHINE:X86 Debug\CBilateralFiltering.obj
+         Debug\CComJ.obj
+         Debug\CCompare.obj
+         Debug\CCompare_IR.obj
+         Debug\CComputeHSI.obj
+         Debug\CComp_Id.obj
+         Debug\CHistogramEqualization.obj
+         Debug\ClineStreach.obj
+         Debug\COtsu.obj
+         Debug\COtsu_1.obj
+         Debug\COtsu_2.obj
+         Debug\COtsu_Float.obj
+         Debug\CReRGB.obj
+         Debug\CSingleLineStreach.obj
+         Debug\CSingleLineStrech_Gbyte.obj
+         Debug\main.obj
+         10.12CloudTest.vcxproj -> E:\C++\10.12CloudTest\Debug\10.12CloudTest.exe
+     1>已完成生成项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.01
