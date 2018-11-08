@@ -1,8 +1,9 @@
-﻿生成启动时间为 2018/11/7 星期三 下午 3:22:28。
+﻿生成启动时间为 2018/11/8 星期四 上午 11:12:51。
      1>项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IE:\gdal\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt CCompare_IR.cpp
-         CCompare_IR.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IE:\gdal\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>e:\c++\10.12cloudtest\10.12cloudtest\csinglelinestrech_gbyte.h(1): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
      1>e:\gdal\include\gdal_priv.h(436): warning C4251: “GDALColorTable::aoEntries”: class“std::vector<_Ty>”需要有 dll 接口由 class“GDALColorTable”的客户端使用
                  with
                  [
@@ -15,8 +16,11 @@
          Debug\CCompare_IR.obj
          Debug\CComputeHSI.obj
          Debug\CComp_Id.obj
+         Debug\CEageClode.obj
+         Debug\CExpansion.obj
          Debug\CHistogramEqualization.obj
          Debug\ClineStreach.obj
+         Debug\CCloudExpansion.obj
          Debug\COtsu.obj
          Debug\COtsu_1.obj
          Debug\COtsu_2.obj
@@ -24,10 +28,11 @@
          Debug\CReRGB.obj
          Debug\CSingleLineStreach.obj
          Debug\CSingleLineStrech_Gbyte.obj
+         Debug\CThickCloud.obj
          Debug\main.obj
          10.12CloudTest.vcxproj -> E:\C++\10.12CloudTest\Debug\10.12CloudTest.exe
      1>已完成生成项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:01.01
+已用时间 00:00:02.29

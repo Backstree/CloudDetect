@@ -188,15 +188,49 @@ int main()
 	compare_ir.Initilization(pszCompareOutputName,pszOtsu2OutputName);
 	compare_ir.Execute(pBufR,pBufG,pszIRutputName);*/
 	cout<<"计算云种子图结束！"<<endl;
+	/////////////////////////////////////////////////////
+	//-------------------------------------------------->
+	//计算云种子图边缘
+	//-------------------------------------------------->
+	/////////////////////////////////////////////////////
+	const char *pszEdgeutputName="E:\\third\\Edge.TIF";
+	/*EageCloude edgecloud;
+	edgecloud.Initilization(pszIRutputName);
+	edgecloud.Execute(pBufR,pszEdgeutputName);*/
+	cout<<"计算云边缘结束！"<<endl;
+	/////////////////////////////////////////////////////
+	//-------------------------------------------------->
+	//膨胀计算
+	//-------------------------------------------------->
+	/////////////////////////////////////////////////////
+	const char *pszComI255putName="E:\\third\\ComI_255.TIF";
+	const char *pszCloudExputName="E:\\third\\CloudExpansion.TIF";
+	//SinglelineStreach.Initilization(pszComIInputName);
+	//SinglelineStreach.Execute(pBufR,pszComI255putName,0,255);
+	CloudExpansion cloudExpansion;
+	cloudExpansion.Initilization(pszComI255putName,pszEdgeutputName);
+	cloudExpansion.Execute(pBufR,pBufG,pszCloudExputName,0.008);
+	cout<<"厚云膨胀！"<<endl;
+	const char *pszThinkCloudExputName="E:\\third\\ThinkCloud.TIF";
+	ThickCloud thinkCloud;
+	thinkCloud.Initilization(pszCloudExputName);
+	thinkCloud.Execute(pBufR,pszThinkCloudExputName);
+
+
+
+	cout<<"厚云结束，开始薄云！"<<endl;
+	const char *pszCloudexputName="E:\\third\\Expansion.TIF";
+	Expansion expansion;
+	expansion.Initilization(pszComI255putName,pszThinkCloudExputName);
+	expansion.Execute(pBufR,pBufG,pszCloudexputName,0.3);
 
 
 
 
-
-
-
-
-
+	cout<<"还有最后一步！"<<endl;
+	const char *pszCloudexpansionputName="E:\\third\\ThinExpansion.TIF";
+	expansion.Initilization(pszComI255putName,pszCloudexputName);
+	expansion.Execute(pBufR,pBufG,pszCloudexpansionputName,0.012);
 
 
 	cout<<"全部计算结束！"<<endl;

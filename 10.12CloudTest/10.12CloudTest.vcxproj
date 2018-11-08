@@ -88,8 +88,11 @@
     <ClInclude Include="CCompare_IR.h" />
     <ClInclude Include="CComputeHSI.h" />
     <ClInclude Include="CComp_Id.h" />
+    <ClInclude Include="CEageCloude.h" />
+    <ClInclude Include="CExpansion.h" />
     <ClInclude Include="CHistogramEqualization.h" />
     <ClInclude Include="ClineStreach.h" />
+    <ClInclude Include="CCloudExpansion.h" />
     <ClInclude Include="COtsu.h" />
     <ClInclude Include="COtsu_1.h" />
     <ClInclude Include="COtsu_2.h" />
@@ -97,6 +100,7 @@
     <ClInclude Include="CReRgb.h" />
     <ClInclude Include="CSingleLineStrech.h" />
     <ClInclude Include="CSingleLineStrech_Gbyte.h" />
+    <ClInclude Include="CThickCloud.h" />
     <ClInclude Include="Include.h" />
   </ItemGroup>
   <ItemGroup>
@@ -106,8 +110,11 @@
     <ClCompile Include="CCompare_IR.cpp" />
     <ClCompile Include="CComputeHSI.cpp" />
     <ClCompile Include="CComp_Id.cpp" />
+    <ClCompile Include="CEageClode.cpp" />
+    <ClCompile Include="CExpansion.cpp" />
     <ClCompile Include="CHistogramEqualization.cpp" />
     <ClCompile Include="ClineStreach.cpp" />
+    <ClCompile Include="CCloudExpansion.cpp" />
     <ClCompile Include="COtsu.cpp" />
     <ClCompile Include="COtsu_1.cpp" />
     <ClCompile Include="COtsu_2.cpp" />
@@ -115,6 +122,7 @@
     <ClCompile Include="CReRGB.cpp" />
     <ClCompile Include="CSingleLineStreach.cpp" />
     <ClCompile Include="CSingleLineStrech_Gbyte.cpp" />
+    <ClCompile Include="CThickCloud.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

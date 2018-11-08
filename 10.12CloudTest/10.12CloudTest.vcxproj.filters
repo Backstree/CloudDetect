@@ -63,6 +63,18 @@
     <ClInclude Include="CCompare_IR.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CEageCloude.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CCloudExpansion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CThickCloud.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CExpansion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CReRGB.cpp">
@@ -111,6 +123,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CCompare_IR.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CEageClode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCloudExpansion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CThickCloud.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CExpansion.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

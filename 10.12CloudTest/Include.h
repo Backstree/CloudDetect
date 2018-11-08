@@ -14,3 +14,7 @@
 #include "COtsu_1.h"
 #include "COtsu_2.h"
 #include "CCompare_IR.h"
+#include "CEageCloude.h"
+#include "CCloudExpansion.h"
+#include "CThickCloud.h"
+#include "CExpansion.h"
