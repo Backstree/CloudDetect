@@ -40,7 +40,7 @@ bool Comp_Id::Initilization(const string & strInputRFileName, const string & str
 	return true;
 }
 //执行
-bool Comp_Id::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileName)
+bool Comp_Id::Execute(const string & strOutputRFileName)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -91,7 +91,7 @@ bool Comp_Id::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFil
 	pDstDatsetR->SetGeoTransform(HRGeoTransForm);
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
-	if (false==comp_Id(pSrcDatasetR,pSrcDatasetG,pDstDatsetR,pRBuf,pGBuf))
+	if (false==comp_Id(pSrcDatasetR,pSrcDatasetG,pDstDatsetR))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -114,8 +114,7 @@ bool Comp_Id::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFil
 }
 
 //重新排序RGB
-bool Comp_Id::comp_Id(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
-				GDALDataset * pDstDatsetR, Float32 *pRBuf,Float32 *pGBuf)
+bool Comp_Id::comp_Id(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDstDatsetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -148,8 +147,8 @@ bool Comp_Id::comp_Id(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)
 	{
@@ -174,10 +173,6 @@ bool Comp_Id::comp_Id(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
 			//无效值如何处理
 			//-------------------------------------------------->
 			/////////////////////////////////////////////////////
-
-			//double a=pSrcBandR->GetNoDataValue(pbSuccess=NULL);
-			//读取失败
-
 			if (pSrcBandR->RasterIO(GF_Read,iXOffset,iYOffset,w,h,pRBuf,w,h,GDT_Float64,0,0) != CE_None||
 				pSrcBandG->RasterIO(GF_Read,iXOffset,iYOffset,w,h,pGBuf,w,h,GDT_Float64,0,0) != CE_None)
 			{
@@ -195,8 +190,6 @@ bool Comp_Id::comp_Id(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
 				//-------------------------------------------------------->
 				///////////////////////////////////////////////////////////
 				pDRBuf[i]=abs(pRBuf[i]-pGBuf[i]);
-
-
 			}
 
 			//写入失败

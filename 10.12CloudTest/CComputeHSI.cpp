@@ -50,9 +50,9 @@ bool CComputeHSI::Initilization(const string & strInputRFileName, const string &
 
 
 //执行
-bool CComputeHSI::Execute(Float32 *pRBuf,const string & strOutputHFileName,
-						   Float32 *pGBuf,const string & strOutputSFileName,
-						   Float32 *pBBuf,const string & strOutputIFileName)
+bool CComputeHSI::Execute(const string & strOutputHFileName,
+						  const string & strOutputSFileName,
+						   const string & strOutputIFileName)
 {
 	if (strOutputHFileName.empty()||strOutputSFileName.empty()||strOutputIFileName.empty())
 	{
@@ -123,8 +123,7 @@ bool CComputeHSI::Execute(Float32 *pRBuf,const string & strOutputHFileName,
 	pDrcDatasetI->SetProjection(pszSRS_WKT);
 	pDrcDatasetI->SetMetadata(pSrcDatasetR->GetMetadata());
 
-	if (false==ComputeHSI(pSrcDatasetR, pSrcDatasetG, pSrcDatasetB,pDrcDatasetH,pDrcDatasetS,pDrcDatasetI,
-		pRBuf,pGBuf,pBBuf))
+	if (false==ComputeHSI(pSrcDatasetR, pSrcDatasetG, pSrcDatasetB,pDrcDatasetH,pDrcDatasetS,pDrcDatasetI))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -160,8 +159,7 @@ bool CComputeHSI::Execute(Float32 *pRBuf,const string & strOutputHFileName,
 
 //线性拉伸
 bool CComputeHSI::ComputeHSI(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-							   GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,
-							   Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf)
+							   GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -198,9 +196,9 @@ bool CComputeHSI::ComputeHSI(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatase
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
-	pBBuf = new Float32[nBlockSize];
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
+	Float32* pBBuf = new Float32[nBlockSize];
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 	Float32 *pDGBuf = new Float32[nBlockSize]; 
 	Float32 *pDBBuf = new Float32[nBlockSize];

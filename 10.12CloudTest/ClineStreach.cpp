@@ -52,9 +52,7 @@ bool CLineStreach::Initilization(const string & strInputRFileName, const string 
 
 
 //执行
-bool CLineStreach::Execute(Float32 *pRBuf,const string & strOutputHFileName,
-					 Float32 *pGBuf,const string & strOutputSFileName,
-					 Float32 *pBBuf,const string & strOutputIFileName
+bool CLineStreach::Execute(const string & strOutputHFileName,const string & strOutputSFileName,const string & strOutputIFileName
 					 ,int AimsMin,int AimsMax)
 {
 	if (strOutputHFileName.empty()||strOutputSFileName.empty()||strOutputIFileName.empty())
@@ -126,8 +124,7 @@ bool CLineStreach::Execute(Float32 *pRBuf,const string & strOutputHFileName,
 	pDrcDatasetI->SetProjection(pszSRS_WKT);
 	pDrcDatasetI->SetMetadata(pSrcDatasetR->GetMetadata());
 
-	if (false==LineStrecth(pSrcDatasetR, pSrcDatasetG, pSrcDatasetB,pDrcDatasetH,pDrcDatasetS,pDrcDatasetI,
-		pRBuf,pGBuf,pBBuf,AimsMin,AimsMax))
+	if (false==LineStrecth(pSrcDatasetR, pSrcDatasetG, pSrcDatasetB,pDrcDatasetH,pDrcDatasetS,pDrcDatasetI,	AimsMin,AimsMax))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -163,8 +160,7 @@ bool CLineStreach::Execute(Float32 *pRBuf,const string & strOutputHFileName,
 
 //线性拉伸
 bool CLineStreach::LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-						 GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,
-						 Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,int AimsMin,int AimsMax)
+						 GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,int AimsMin,int AimsMax)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -201,9 +197,9 @@ bool CLineStreach::LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pSrcData
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
-	pBBuf = new Float32[nBlockSize];
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
+	Float32* pBBuf = new Float32[nBlockSize];
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 	Float32 *pDGBuf = new Float32[nBlockSize]; 
 	Float32 *pDBBuf = new Float32[nBlockSize];

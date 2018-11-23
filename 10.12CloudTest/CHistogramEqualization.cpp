@@ -35,7 +35,7 @@ bool CHistogramEqualization::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-bool CHistogramEqualization::Execute(Gbyte *pRBuf,const string & strOutputHFileName)
+bool CHistogramEqualization::Execute(const string & strOutputHFileName)
 {
 	if (strOutputHFileName.empty())
 	{
@@ -83,7 +83,7 @@ bool CHistogramEqualization::Execute(Gbyte *pRBuf,const string & strOutputHFileN
 	pDrcDatasetH->SetProjection(pszSRS_WKT);
 	pDrcDatasetH->SetMetadata(pSrcDatasetR->GetMetadata());
 
-	if (false==HistogramEqualization(pSrcDatasetR,pDrcDatasetH,pRBuf))
+	if (false==HistogramEqualization(pSrcDatasetR,pDrcDatasetH))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -102,7 +102,7 @@ bool CHistogramEqualization::Execute(Gbyte *pRBuf,const string & strOutputHFileN
 }
 
 //线性拉伸
-bool CHistogramEqualization::HistogramEqualization(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR, Gbyte *pRBuf)
+bool CHistogramEqualization::HistogramEqualization(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -134,7 +134,7 @@ bool CHistogramEqualization::HistogramEqualization(GDALDataset * pSrcDatasetR, G
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Gbyte[nBlockSize]; 
+	Gbyte* pRBuf = new Gbyte[nBlockSize]; 
 	Float32 *pDRBuf=new Float32[nBlockSize];
 	int bRGoMin=0,bRGoMax=0;
 	adfRmaxmin[0]=pSrcBandR->GetMaximum(&bRGoMax);

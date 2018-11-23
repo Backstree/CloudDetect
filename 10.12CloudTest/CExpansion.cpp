@@ -1,4 +1,4 @@
-#include "CExpansion.h""
+#include "CExpansion.h"
 #include <iostream>
 #include "gdal_priv.h"
 Expansion::Expansion()
@@ -39,7 +39,7 @@ bool Expansion::Initilization(const string & strInputRFileName,const string & st
 	return true;
 }
 //执行
-bool Expansion::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputHFileName,Float32 k)
+bool Expansion::Execute(const string & strOutputHFileName,Float32 k)
 {
 	if (strOutputHFileName.empty())
 	{
@@ -88,9 +88,7 @@ bool Expansion::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputHF
 	pDrcDatasetH->SetProjection(pszSRS_WKT);
 	pDrcDatasetH->SetMetadata(pSrcDatasetR->GetMetadata());
 	GDALRasterBand * pDSrcBandR = pSrcDatasetR->GetRasterBand(1);
-	//存放整幅影像的数组，读取使用
-	Float32 *pDsdBuf=new Float32 [nWidth*nHeight];
-	if (false==expansion(pSrcDatasetR,pSrcDatasetG,pDrcDatasetH,pRBuf,pGBuf,k))
+	if (false==expansion(pSrcDatasetR,pSrcDatasetG,pDrcDatasetH,k))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -100,16 +98,13 @@ bool Expansion::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputHF
 		system("pause");
 		return false;
 	}
-	delete [] pDsdBuf;
-	pDsdBuf = 0;
 	GDALClose(pSrcDatasetR);
 	pSrcDatasetR = 0;
 	GDALClose(pDrcDatasetH);
 	pDrcDatasetH = 0;
 	return true;
 }
-bool Expansion::expansion(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG, 
-									GDALDataset * pDrcDatasetR, Float32 *pRBuf ,Float32 *pGBuf,Float32 k)
+bool Expansion::expansion(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDrcDatasetR,Float32 k)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -123,199 +118,228 @@ bool Expansion::expansion(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
 		system("pause");
 		return false;
 	}
-	int nXBlockSize,nYBlockSize;
+	int nXBlockSize,nYBlockSize,BY,BX;
 	int iXBlock=0,iYBlock=0;
+	int iXOffset,iYOffset;
+	
 	pSrcBandR->GetBlockSize(&nXBlockSize,&nYBlockSize);	
 	//设置块的大小为3
 	if (nXBlockSize<64||nXBlockSize>512)		
 	{
 		nXBlockSize = 3;
+		BX=513;
 	}
 	if (nYBlockSize<64||nYBlockSize>512)
 	{
 		nYBlockSize = 3;
+		BY=513;
 	}
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
+	int XBL = (nWidth + 512 - 1)/512;
+	int YBL = (nHeight + 512 - 1)/512;
+	long int BS=BX*BY;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	Float32 *pDRBuf = new Float32[nWidth*nHeight];
-	Float32 *pDDDRBuf = new Float32[nWidth*nHeight];
-	Float32 **psdBuf=new Float32 *[nHeight];
-	for (int i=0;i<nHeight;i++)
+	Float32 *pDRBuf = new Float32[9];
+	Float32 *pDDDRBuf = new Float32[(BX-1)*(BY-1)];
+	Float32 **psdBuf=new Float32 *[BY];
+	for (int i=0;i<BY;i++)
 	{
-		psdBuf[i]=new Float32 [nWidth];
+		psdBuf[i]=new Float32 [BX];
 	}
-	pRBuf = new Float32[nWidth*nHeight]; 
-	if (pSrcBandR->RasterIO(GF_Read,0,0,nWidth,nHeight,pRBuf,nWidth,nHeight,GDT_Float64,0,0) != CE_None)
-	{
-		delete [] pRBuf;
-		pRBuf = 0;
-		std::cout<<"读取文件出错！"<<std::endl;
-		return false;
-	}
+	Float32* pRBuf = new Float32[BS]; 
 	//把读取影像转为二维数组
-	Float32 **pDDsdBuf=new Float32 *[nHeight];
-	for (int i=0;i<nHeight;i++)
+	Float32 **pDDsdBuf=new Float32 *[BY];
+	for (int i=0;i<BY;i++)
 	{
-		pDDsdBuf[i]=new Float32 [nWidth];
+		pDDsdBuf[i]=new Float32 [BX];
 	}
-	int jj=0;
-	//把整幅影像转换为二维数组
-	for (int ii =0; ii <nHeight; ii++)
-	{
-		for (int cc =0; cc <nWidth; cc++)
-		{
-			pDDsdBuf[ii][cc]=pRBuf[jj++];
-			if (jj>nWidth*nHeight)
-			{
-				break;
-			}
-		}
-	}
-	jj=0;
-	pGBuf = new Float32[nWidth*nHeight]; 
-	if (pSrcBandG->RasterIO(GF_Read,0,0,nWidth,nHeight,pGBuf,nWidth,nHeight,GDT_Float64,0,0) != CE_None)
-	{
-		delete [] pGBuf;
-		pGBuf = 0;
-		std::cout<<"读取文件出错！"<<std::endl;
-		return false;
-	}
+	Float32* pGBuf = new Float32[BS]; 
+
 	//把读取影像转为二维数组
-	Float32 **pDDsdGBuf=new Float32 *[nHeight];
-	for (int i=0;i<nHeight;i++)
+	Float32 **pDDsdGBuf=new Float32 *[BY];
+	for (int i=0;i<BY;i++)
 	{
-		pDDsdGBuf[i]=new Float32 [nWidth];
+		pDDsdGBuf[i]=new Float32 [BX];
 	}
-	//把整幅影像转换为二维数组
-	for (int ii =0; ii <nHeight; ii++)
+	Float32 **pdDsdBuf=new Float32 *[BY];
+	for (int i=0;i<BY;i++)
 	{
-		for (int cc =0; cc <nWidth; cc++)
+		pdDsdBuf[i]=new Float32 [BX];
+	}
+	int w=0,h=0;
+	//影像分块处理
+	for (int iYBL=0;iYBL<YBL;iYBL++)
+	{
+		iYOffset=iYBL*(BY-1);	
+		for (int iXBL=0;iXBL<XBL;iXBL++)
 		{
-			pDDsdGBuf[ii][cc]=pGBuf[jj++];
-			if (jj>nWidth*nHeight)
+			iXOffset=iXBL*(BX-1);
+			w = BX;
+			h = BY;
+			//影像边缘不足一个块的宽和长时的操作
+			if (iXBL == XBL - 1)
 			{
-				break;
+				w = nWidth - iXBL*(BX-1);				
 			}
-		}
-	}
-	jj=0;
-	Float32 **pdDsdBuf=new Float32 *[nHeight];
-	for (int i=0;i<nHeight;i++)
-	{
-		pdDsdBuf[i]=new Float32 [nWidth];
-	}
-		for (iYBlock=0; iYBlock<nHeight; iYBlock++)
-		{
-			for (iXBlock=0; iXBlock<nWidth; iXBlock++)
+			if (iYBL == YBL - 1)
 			{
-				//云像素处理
-				if (pDDsdGBuf[iYBlock][iXBlock]==255)
+				h = nHeight - iYBL*(BY-1);				
+			}
+			BS = w*h;
+			//读取影像
+			if (pSrcBandR->RasterIO(GF_Read,iXOffset,iYOffset,w,h,pRBuf,w,h,GDT_Float64,0,0) != CE_None)
+			{
+				delete [] pRBuf;
+				pRBuf = 0;
+				std::cout<<"读取文件出错！"<<std::endl;
+				return false;
+			}				
+			OneArr2TwoArr(pRBuf,pDDsdBuf,0,h,0,w);
+			//读取影像
+			if (pSrcBandG->RasterIO(GF_Read,iXOffset,iYOffset,w,h,pGBuf,w,h,GDT_Float64,0,0) != CE_None)
+			{
+				delete [] pGBuf;
+				pGBuf = 0;
+				std::cout<<"读取文件出错！"<<std::endl;
+				return false;
+			}
+			OneArr2TwoArr(pGBuf,pDDsdGBuf,0,h,0,w);
+			for (iYBlock=0; iYBlock<h; iYBlock++)
+			{
+				for (iXBlock=0; iXBlock<w; iXBlock++)
 				{
-					//以云像素为中心的3*3窗口块
-					if (iXBlock+1<nWidth&&iYBlock+1<nHeight&&iXBlock-1>=0&&iYBlock-1>=0)
+					//云像素处理
+					if (pDDsdGBuf[iYBlock][iXBlock]==255)
 					{
-						if (pSrcBandR->RasterIO(GF_Read,iXBlock-1,iYBlock-1,3,3,pDRBuf,3,3,GDT_Float64,0,0) != CE_None)
+						//以云像素为中心的3*3窗口块
+						if (iXBlock+1<w&&iYBlock+1<h&&iXBlock-1>=0&&iYBlock-1>=0)
 						{
-							delete [] pDRBuf;
-							pDRBuf = 0;
-							std::cout<<"读取文件出错！"<<std::endl;
-							return false;
-						}
-						//把3的影像块转换成二维数组->psdBuf
-						int j=0;
-						for (int i = iYBlock-1; i <=iYBlock+1; i++)
-						{
-							for (int c = iXBlock-1; c <=iXBlock+1; c++)
+							if (pSrcBandR->RasterIO(GF_Read,iXBlock-1,iYBlock-1,3,3,pDRBuf,3,3,GDT_Float64,0,0) != CE_None)
 							{
-								psdBuf[i][c]=pDRBuf[j++];
+								delete [] pDRBuf;
+								pDRBuf = 0;
+								std::cout<<"读取文件出错！"<<std::endl;
+								return false;
 							}
-						}
-						//
-						for (int i = iYBlock-1; i <=iYBlock+1; i++)
-						{
-							for (int c = iXBlock-1; c <=iXBlock+1; c++)
+							//把3的影像块转换成二维数组->psdBuf				
+							int jj = 0;
+							for (int i = 0; i < 3; i++)
 							{
-								if(pDDsdGBuf[i][c]==0/*&&i!=iYBlock&&c!=iXBlock*/)
+								for (int c = 0; c < 3; c++)
 								{
-									if(abs(pDDsdBuf[iYBlock][iXBlock]-psdBuf[i][c])<k*pDDsdBuf[iYBlock][iXBlock])
+
+									psdBuf[iYBlock-1+i][iXBlock-1+c] = pDRBuf[jj++];
+
+								}
+								if (jj > 9)
+								{
+									break;
+								}
+							}
+							for (int i = iYBlock-1; i <=iYBlock+1; i++)
+							{
+								for (int c = iXBlock-1; c <=iXBlock+1; c++)
+								{
+									if(pDDsdGBuf[i][c]!=255&&i!=iYBlock&&c!=iXBlock)
 									{
-										pdDsdBuf[i][c]=255;
+										if(abs(pDDsdBuf[iYBlock][iXBlock]-psdBuf[i][c])<k*pDDsdBuf[iYBlock][iXBlock])
+										{
+											pdDsdBuf[i][c]=255;
+										}
+										else
+										{
+											pdDsdBuf[i][c]=pDDsdGBuf[i][c];
+										}
 									}
 									else
 									{
 										pdDsdBuf[i][c]=pDDsdGBuf[i][c];
 									}
 								}
-								else
-								{
-									pdDsdBuf[i][c]=pDDsdGBuf[i][c];
-								}
 							}
+						}else
+						{
+							pdDsdBuf[iYBlock][iXBlock]=pDDsdGBuf[iYBlock][iXBlock];
 						}
+					}	
+					else
+					{
+						pdDsdBuf[iYBlock][iXBlock]=pDDsdGBuf[iYBlock][iXBlock];
 					}
-				}	
-				else
-				{
-					pdDsdBuf[iYBlock][iXBlock]=pDDsdGBuf[iYBlock][iXBlock];
 				}
 			}
-		}
-	int hhh=0;
-	for (int i=0;i<nHeight;i++)
-	{
-		for (int j=0;j<nWidth;j++)
-		{
-			pDDDRBuf[hhh++]=pdDsdBuf[i][j];
+			TwoArr2OneArr(pdDsdBuf,pDDDRBuf,0,h-1,0,w-1);
+			if (pDstBandR->RasterIO(GF_Write,iXOffset,iYOffset,w-1,h-1,pDDDRBuf,w-1,h-1,GDT_Float64,0,0) != CE_None)
+			{
+				delete [] pDDDRBuf;
+				pDDDRBuf = 0;
+
+				std::cout<<"写入文件出错！"<<std::endl;
+				return false;
+			}
 		}
 	}
-	if (pDstBandR->RasterIO(GF_Write,0,0,nWidth,nHeight,pDDDRBuf,nWidth,nHeight,GDT_Float64,0,0) != CE_None)
-	{
-		delete [] pRBuf;
-		pRBuf = 0;
-		for(int i = 0; i <nHeight; i++)
-		{
-			delete [] psdBuf[i];
-		}
-		delete [] psdBuf;
-		for(int i = 0; i <nHeight; i++)
-		{
-			delete [] pdDsdBuf[i];
-		}
-		delete [] pdDsdBuf;
-		delete [] pDRBuf;
-		pDRBuf = 0;
-		for(int i = 0; i <nHeight; i++)
-		{
-			delete [] pDDsdBuf[i];
-		}
-		delete [] pDDsdBuf;
-		delete [] pDDDRBuf;
-		pDDDRBuf = 0;
-		std::cout<<"写入文件出错！"<<std::endl;
-		return false;
-	}
-	//释放内存
 	delete [] pRBuf;
 	pRBuf = 0;
-	for(int i = 0; i <nHeight; i++)
-	{
-		delete [] psdBuf[i];
-	}
-	delete [] psdBuf;
-	for(int i = 0; i <nHeight; i++)
-	{
-		delete [] pdDsdBuf[i];
-	}
-	delete [] pdDsdBuf;
-	delete [] pDRBuf;
-	pDRBuf = 0;
-	for(int i = 0; i <nHeight; i++)
+	delete [] pGBuf;
+	pGBuf = 0;	
+	for(int i = 0; i <BY; i++)
 	{
 		delete [] pDDsdBuf[i];
 	}
 	delete [] pDDsdBuf;
+	delete [] pDRBuf;
+	pDRBuf = 0;
+	for(int i = 0; i <BY; i++)
+	{
+		delete [] pDDsdGBuf[i];
+	}
+	delete [] pDDsdGBuf;
+	for(int i = 0; i <BY; i++)
+	{
+		delete [] psdBuf[i];
+	}
+	delete [] psdBuf;
+	for(int i = 0; i <BY; i++)
+	{
+		delete [] pdDsdBuf[i];
+	}
+	delete [] pdDsdBuf;
+	//释放内存
 	delete [] pDDDRBuf;
 	pDDDRBuf = 0;
 	return true;
+}
+void Expansion::TwoArr2OneArr(Float32 **pBuf,Float32 *pRBuf,int ii,int nHeight,int cc,int nWidth)
+{
+	int hhh=0;
+	for (int i=ii;i<nHeight;i++)
+	{
+		for (int j=cc;j<nWidth;j++)
+		{
+			pRBuf[hhh++]=pBuf[i][j];
+		}
+		if (hhh>(nWidth-cc)*(nHeight-ii))
+		{
+			break;
+		}
+	}
+}
+void Expansion::OneArr2TwoArr(Float32 *pBuf,Float32 **pRBuf,int ii,int nHeight,int cc,int nWidth)
+{
+	int jj=0;
+	for (int i =ii; i <nHeight; i++)
+	{
+		for (int c =cc; c <nWidth; c++)
+		{
+
+			pRBuf[i][c]=pBuf[jj++];
+
+		}
+		if (jj>(nWidth-cc)*(nHeight-ii))
+		{
+			break;
+		}
+	}	
 }

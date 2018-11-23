@@ -10,8 +10,8 @@ public:
 	Otsu_Float();
 	~Otsu_Float();
 	bool Initilization(const string & strInputRFileName);
-	Float32 Execute(Float32 *pRBuf,double T);	
-	Float32 otsu_float(GDALDataset * pSrcDatasetR,Float32 *pRBuf);
+	Float32 Execute(double T);	
+	Float32 otsu_float(GDALDataset * pSrcDatasetR);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputRFileName;//输出R文件名

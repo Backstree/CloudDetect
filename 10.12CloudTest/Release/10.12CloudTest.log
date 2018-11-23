@@ -1,0 +1,10 @@
+﻿生成启动时间为 2018/11/23 星期五 下午 3:48:17。
+     1>项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”在节点 2 上(Build 个目标)。
+       项目文件包含 ToolsVersion="15.0" 设置，但此工具集未知或缺失。您可以通过为此工具集安装相应的 .NET Framework 来解决此问题。将项目视为具有 ToolsVersion="4.0" 设置。
+     1>Link:
+         10.12CloudTest.vcxproj -> E:\C++\10.12CloudTest\Release\10.12CloudTest.exe
+     1>已完成生成项目“E:\C++\10.12CloudTest\10.12CloudTest\10.12CloudTest.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.04

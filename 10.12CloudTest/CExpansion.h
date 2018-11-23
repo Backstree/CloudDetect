@@ -10,8 +10,10 @@ public:
 	Expansion();
 	~Expansion();
 	bool Initilization(const string & strInputRFileName,const string & strInputGFileName);
-	bool Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileName,Float32 k);	
-	bool expansion(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDrcDatasetR,Float32 *pRBuf,Float32 *pGBuf,Float32 k);
+	bool Execute(const string & strOutputRFileName,Float32 k);	
+	bool expansion(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDrcDatasetR,Float32 k);
+	void TwoArr2OneArr(Float32 **pBuf,Float32 *pRBuf,int ii,int nHeight,int cc,int nWidth);
+	void OneArr2TwoArr(Float32 *pBuf,Float32 **pRBuf,int ii,int nHeight,int cc,int nWidth);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strInputGFileName;//输入G文件名

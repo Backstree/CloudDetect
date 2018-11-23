@@ -35,7 +35,7 @@ bool ThickCloud::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-bool ThickCloud::Execute(Float32 *pRBuf,const string & strOutputRFileName)
+bool ThickCloud::Execute(const string & strOutputRFileName)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -81,7 +81,7 @@ bool ThickCloud::Execute(Float32 *pRBuf,const string & strOutputRFileName)
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
 
-	if (false==thickCloud(pSrcDatasetR,pDstDatsetR,pRBuf))
+	if (false==thickCloud(pSrcDatasetR,pDstDatsetR))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -98,9 +98,8 @@ bool ThickCloud::Execute(Float32 *pRBuf,const string & strOutputRFileName)
 	pDstDatsetR = 0;
 	return true;
 }
-
 //重新排序RGB
-bool ThickCloud::thickCloud(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,	Float32 *pRBuf)
+bool ThickCloud::thickCloud(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -126,7 +125,7 @@ bool ThickCloud::thickCloud(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatase
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
+	Float32* pRBuf = new Float32[nBlockSize]; 
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)
@@ -152,10 +151,6 @@ bool ThickCloud::thickCloud(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatase
 			//无效值如何处理
 			//-------------------------------------------------->
 			/////////////////////////////////////////////////////
-
-			//double a=pSrcBandR->GetNoDataValue(pbSuccess=NULL);
-			//读取失败
-
 			if (pSrcBandR->RasterIO(GF_Read,iXOffset,iYOffset,w,h,pRBuf,w,h,GDT_Float64,0,0) != CE_None)
 			{
 				delete [] pRBuf;
@@ -170,9 +165,7 @@ bool ThickCloud::thickCloud(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatase
 				//-------------------------------------------------------->
 				///////////////////////////////////////////////////////////
 				pDRBuf[i]=pRBuf[i]!=0?255:0;
-
 			}
-
 			//写入失败
 			if (pDstBandR->RasterIO(GF_Write,iXOffset,iYOffset,w,h,pDRBuf,w,h,GDT_Float64,0,0) != CE_None)
 			{

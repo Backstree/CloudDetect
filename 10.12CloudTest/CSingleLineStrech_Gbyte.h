@@ -1,5 +1,5 @@
-#ifdef SINGLELINESTREACH(GBYTE)_H_INCLUDE
-#endif SINGLELINESTREACH(GBYTE)_H_INCLUDE
+#ifdef SINGLELINESTREACH_GBYTE_H_INCLUDE
+#endif SINGLELINESTREACH_GBYTE_H_INCLUDE
 #include <string>
 using std::string;
 typedef unsigned char GByte;
@@ -11,8 +11,8 @@ public:
 	CSingleLineStreach_GByte();
 	~CSingleLineStreach_GByte();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(GByte *pRBuf,const string & strOutputHFileName,int AimsMin,int AimsMax);	
-	bool LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,GByte *pRBuf,int AimsMin,int AimsMax);
+	bool Execute(const string & strOutputHFileName,int AimsMin,int AimsMax);	
+	bool LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,int AimsMin,int AimsMax);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputHFileName;//输出H文件名

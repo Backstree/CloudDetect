@@ -11,8 +11,8 @@ public:
 	CSingleLineStreach();
 	~CSingleLineStreach();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputHFileName,int AimsMin,int AimsMax);	
-	bool LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,Float32 *pRBuf,int AimsMin,int AimsMax);
+	bool Execute(const string & strOutputHFileName,int AimsMin,int AimsMax);	
+	bool LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,int AimsMin,int AimsMax);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputHFileName;//输出H文件名

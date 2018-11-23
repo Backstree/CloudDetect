@@ -36,7 +36,7 @@ bool Otsu::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-Float32 Otsu::Execute(GByte *pRBuf,double T)
+Float32 Otsu::Execute(double T)
 {
 	if (m_bInit==false)
 	{
@@ -62,7 +62,7 @@ Float32 Otsu::Execute(GByte *pRBuf,double T)
 	}	
 	int nBandCount = pSrcDatasetR->GetRasterCount();
 
-	 T=otsu(pSrcDatasetR,pRBuf);
+	 T=otsu(pSrcDatasetR);
 	if (false==m_bDouble)
 	{
 		GDALClose(pSrcDatasetR);
@@ -79,7 +79,7 @@ Float32 Otsu::Execute(GByte *pRBuf,double T)
 }
 
 //计算Otsu
-Float32 Otsu::otsu(GDALDataset * pSrcDatasetR, GByte *pRBuf)
+Float32 Otsu::otsu(GDALDataset * pSrcDatasetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -90,7 +90,7 @@ Float32 Otsu::otsu(GDALDataset * pSrcDatasetR, GByte *pRBuf)
 		std::cout<<"格式错误"<<std::endl;
 		return false;
 	}
-	pRBuf = new GByte[nWidth*nHeight]; 
+	GByte* pRBuf = new GByte[nWidth*nHeight]; 
 	///////////////////////////////////////////////////////////
 	//-------------------------------------------------------->
 	//计算Otsu阈值
@@ -98,7 +98,7 @@ Float32 Otsu::otsu(GDALDataset * pSrcDatasetR, GByte *pRBuf)
 	///////////////////////////////////////////////////////////
 	int anHistogram[256];
 	pSrcBandR->GetHistogram(-0.5,255.5,256,anHistogram,FALSE,FALSE,GDALDummyProgress,NULL);
-	int t=0;
+	double t=0;
 	double u1=0,u2=0,w1=0,w2=0;
 	double G=0,T=0;
 	for (int Tem=0;Tem<256;Tem++)

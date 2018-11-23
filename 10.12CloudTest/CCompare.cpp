@@ -46,7 +46,7 @@ bool Compare::Initilization(const string & strInputRFileName, const string & str
 	return true;
 }
 //执行
-bool Compare::Execute(Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,const string & strOutputRFileName,int T)
+bool Compare::Execute(const string & strOutputRFileName,int T)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -102,7 +102,7 @@ bool Compare::Execute(Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,const string 
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
 
-	if (false==compare(pSrcDatasetR,pSrcDatasetG,pSrcDatasetB,pDstDatsetR,pRBuf, pGBuf,pBBuf,T))
+	if (false==compare(pSrcDatasetR,pSrcDatasetG,pSrcDatasetB,pDstDatsetR,T))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -125,13 +125,11 @@ bool Compare::Execute(Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,const string 
 	pSrcDatasetG = 0;
 	GDALClose(pSrcDatasetB);
 	pSrcDatasetB = 0;
-
 	return true;
 }
 
 //重新排序RGB
-bool Compare::compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-					  GDALDataset * pDrcDatasetR,	Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,int T)
+bool Compare::compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB, GDALDataset * pDrcDatasetR,int T)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -166,9 +164,9 @@ bool Compare::compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDAL
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
-	pBBuf = new Float32[nBlockSize];
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
+	Float32* pBBuf = new Float32[nBlockSize];
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)
@@ -217,19 +215,7 @@ bool Compare::compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDAL
 				//计算值
 				//-------------------------------------------------------->
 				///////////////////////////////////////////////////////////
-			/*	if (pRBuf[i]>T)
-				{
-					pDRBuf[i]=0;
-				}
-				if (pGBuf[i]>350)
-				{
-					pDRBuf[i]=1;
-				}
-				if (pBBuf[i]<120)
-				{
-					pDRBuf[i]=2;
-				}*/
-				if (pRBuf[i]>T&&pGBuf[i]>350&&pBBuf[i]<120)
+			if (pRBuf[i]>T&&pGBuf[i]>350&&pBBuf[i]<120)
 				{
 					pDRBuf[i]=255;
 				}

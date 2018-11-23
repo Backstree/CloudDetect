@@ -10,8 +10,10 @@ public:
 	EageCloude();
 	~EageCloude();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputHFileName);	
-	bool eageCloude(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,Float32 *pRBuf);
+	bool Execute(const string & strOutputHFileName);	
+	bool eageCloude(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR);
+	void TwoArr2OneArr(Float32 **pBuf,Float32 *pRBuf,int ii,int nHeight,int cc,int nWidth);
+	void OneArr2TwoArr(Float32 *pBuf,Float32 **pRBuf,int ii,int nHeight,int cc,int nWidth);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputHFileName;//输出H文件名

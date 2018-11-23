@@ -36,7 +36,7 @@ bool Otsu_Float::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-Float32 Otsu_Float::Execute(Float32 *pRBuf,double T)
+Float32 Otsu_Float::Execute(double T)
 {
 	if (m_bInit==false)
 	{
@@ -62,7 +62,7 @@ Float32 Otsu_Float::Execute(Float32 *pRBuf,double T)
 	}	
 	int nBandCount = pSrcDatasetR->GetRasterCount();
 
-	T=otsu_float(pSrcDatasetR,pRBuf);
+	T=otsu_float(pSrcDatasetR);
 	if (false==m_bDouble)
 	{
 		GDALClose(pSrcDatasetR);
@@ -79,7 +79,7 @@ Float32 Otsu_Float::Execute(Float32 *pRBuf,double T)
 }
 
 //计算Otsu
-Float32 Otsu_Float::otsu_float(GDALDataset * pSrcDatasetR, Float32 *pRBuf)
+Float32 Otsu_Float::otsu_float(GDALDataset * pSrcDatasetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -90,7 +90,7 @@ Float32 Otsu_Float::otsu_float(GDALDataset * pSrcDatasetR, Float32 *pRBuf)
 		std::cout<<"格式错误"<<std::endl;
 		return false;
 	}
-	pRBuf = new Float32[nWidth*nHeight]; 
+	Float32* pRBuf = new Float32[nWidth*nHeight]; 
 	///////////////////////////////////////////////////////////
 	//-------------------------------------------------------->
 	//计算Otsu阈值

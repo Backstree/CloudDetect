@@ -40,7 +40,7 @@ bool ComJ::Initilization(const string & strInputRFileName, const string & strInp
 	return true;
 }
 //Ö´ÐÐ
-bool ComJ::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileName)
+bool ComJ::Execute(const string & strOutputRFileName)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -91,7 +91,7 @@ bool ComJ::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileNa
 	pDstDatsetR->SetGeoTransform(HRGeoTransForm);
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
-	if (false==comJ(pSrcDatasetR,pSrcDatasetG,pDstDatsetR,pRBuf,pGBuf))
+	if (false==comJ(pSrcDatasetR,pSrcDatasetG,pDstDatsetR))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -114,8 +114,7 @@ bool ComJ::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileNa
 }
 
 //ÖØÐÂÅÅÐòRGB
-bool ComJ::comJ(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
-				  GDALDataset * pDstDatsetR, Float32 *pRBuf,Float32 *pGBuf)
+bool ComJ::comJ(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDstDatsetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -148,8 +147,8 @@ bool ComJ::comJ(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)
 	{

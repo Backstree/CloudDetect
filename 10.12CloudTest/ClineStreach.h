@@ -12,13 +12,10 @@ public:
 	~CLineStreach();
 	bool Initilization(const string & strInputRFileName,
 		const string & strInputGFileName,const string & strInputBFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputHFileName,
-		Float32 *pGBuf,const string & strOutputSFileName,
-		Float32 *pBBuf,const string & strOutputIFileName,
+	bool Execute(const string & strOutputHFileName,const string & strOutputSFileName,const string & strOutputIFileName,
 		int AimsMin,int AimsMax);	
 	bool LineStrecth(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-		GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,
-		Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,int AimsMin,int AimsMax);
+		GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,int AimsMin,int AimsMax);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strInputGFileName;//输入G文件名

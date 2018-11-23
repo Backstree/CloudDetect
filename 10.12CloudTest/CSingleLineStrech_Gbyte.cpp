@@ -35,7 +35,7 @@ bool CSingleLineStreach_GByte::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-bool CSingleLineStreach_GByte::Execute(GByte *pRBuf,const string & strOutputHFileName,int AimsMin,int AimsMax)
+bool CSingleLineStreach_GByte::Execute(const string & strOutputHFileName,int AimsMin,int AimsMax)
 {
 	if (strOutputHFileName.empty())
 	{
@@ -83,7 +83,7 @@ bool CSingleLineStreach_GByte::Execute(GByte *pRBuf,const string & strOutputHFil
 	pDrcDatasetH->SetProjection(pszSRS_WKT);
 	pDrcDatasetH->SetMetadata(pSrcDatasetR->GetMetadata());
 
-	if (false==LineStrecth(pSrcDatasetR,pDrcDatasetH,pRBuf,AimsMin,AimsMax))
+	if (false==LineStrecth(pSrcDatasetR,pDrcDatasetH,AimsMin,AimsMax))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -102,7 +102,7 @@ bool CSingleLineStreach_GByte::Execute(GByte *pRBuf,const string & strOutputHFil
 }
 
 //线性拉伸
-bool CSingleLineStreach_GByte::LineStrecth(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR, GByte *pRBuf,int AimsMin,int AimsMax)
+bool CSingleLineStreach_GByte::LineStrecth(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,int AimsMin,int AimsMax)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -135,9 +135,9 @@ bool CSingleLineStreach_GByte::LineStrecth(GDALDataset * pSrcDatasetR, GDALDatas
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new GByte[nBlockSize]; 
+	GByte* pRBuf = new GByte[nBlockSize]; 
 	GByte *pDRBuf = new GByte[nBlockSize]; 
-	int bRGoMin,bRGoMax;
+	int bRGoMin=0,bRGoMax=0;
 	adfRmaxmin[0]=pSrcBandR->GetMaximum(&bRGoMax);
 	adfRmaxmin[1]=pSrcBandR->GetMinimum(&bRGoMax);
 	if (!(bRGoMax&&bRGoMin))

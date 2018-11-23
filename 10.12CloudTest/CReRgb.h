@@ -12,12 +12,9 @@ public:
 	~ReRGB();
 	bool Initilization(const string & strInputRFileName,
 		const string & strInputGFileName,const string & strInputBFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputRFileName,
-				Float32 *pGBuf,const string & strOutputGFileName,
-				Float32 *pBBuf,const string & strOutputBFileName);	
+	bool Execute(const string & strOutputRFileName,const string & strOutputGFileName,const string & strOutputBFileName);	
 	bool reRGB(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-		 GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB,
-		Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf);
+		 GDALDataset * pDrcDatasetR,GDALDataset * pDrcDatasetG,GDALDataset * pDrcDatasetB);
 	Float32 Max(Float32 a,Float32 b);
 	Float32 Min(Float32 a,Float32 b);
 protected:

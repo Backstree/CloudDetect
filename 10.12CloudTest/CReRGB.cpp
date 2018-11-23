@@ -46,9 +46,7 @@ bool ReRGB::Initilization(const string & strInputRFileName, const string & strIn
 	return true;
 }
 //Ö´ÐÐ
-bool ReRGB::Execute(Float32 *pRBuf,const string & strOutputRFileName,
-					Float32 *pGBuf,const string & strOutputGFileName,
-					Float32 *pBBuf,const string & strOutputBFileName)
+bool ReRGB::Execute(const string & strOutputRFileName,const string & strOutputGFileName,const string & strOutputBFileName)
 {
 	if (strOutputRFileName.empty()||strOutputGFileName.empty()||strOutputBFileName.empty())
 	{
@@ -117,7 +115,7 @@ bool ReRGB::Execute(Float32 *pRBuf,const string & strOutputRFileName,
 	pDstDatsetB->SetProjection(pszSRS_WKT);
 	pDstDatsetB->SetMetadata(pDstDatsetB->GetMetadata());
 
-	if (false==reRGB(pSrcDatasetR,pSrcDatasetG,pSrcDatasetB,pDstDatsetR,pDstDatsetG,pDstDatsetB,pRBuf, pGBuf,pBBuf))
+	if (false==reRGB(pSrcDatasetR,pSrcDatasetG,pSrcDatasetB,pDstDatsetR,pDstDatsetG,pDstDatsetB))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -154,8 +152,7 @@ bool ReRGB::Execute(Float32 *pRBuf,const string & strOutputRFileName,
 
 //ÖØÐÂÅÅÐòRGB
 bool ReRGB::reRGB(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-				  GDALDataset * pDstDatsetR,GDALDataset * pDstDatsetG,GDALDataset * pDstDatsetB,
-				  Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf)
+				  GDALDataset * pDstDatsetR,GDALDataset * pDstDatsetG,GDALDataset * pDstDatsetB)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -192,9 +189,9 @@ bool ReRGB::reRGB(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALData
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
-	pBBuf = new Float32[nBlockSize];
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
+	Float32* pBBuf = new Float32[nBlockSize];
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 	Float32 *pDGBuf = new Float32[nBlockSize]; 
 	Float32 *pDBBuf = new Float32[nBlockSize];

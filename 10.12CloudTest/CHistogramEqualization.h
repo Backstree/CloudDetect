@@ -11,8 +11,8 @@ public:
 	CHistogramEqualization();
 	~CHistogramEqualization();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(Gbyte *pRBuf,const string & strOutputHFileName);	
-	bool HistogramEqualization(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,Gbyte *pRBuf);
+	bool Execute(const string & strOutputHFileName);	
+	bool HistogramEqualization(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR);
 protected:
 	string m_strInputRFileName;
 	string m_strOutputHFileName;

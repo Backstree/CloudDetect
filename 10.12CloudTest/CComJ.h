@@ -11,9 +11,8 @@ public:
 	ComJ();
 	~ComJ();
 	bool Initilization(const string & strInputRFileName,const string & strInputGFileName);
-	bool Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileName);	
-	bool comJ(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
-		GDALDataset * pDrcDatasetR,Float32 *pRBuf,Float32 *pGBuf);
+	bool Execute(const string & strOutputRFileName);	
+	bool comJ(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDrcDatasetR);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strInputGFileName;//输入G文件名

@@ -11,8 +11,8 @@ public:
 	Otsu_1();
 	~Otsu_1();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputBFileName,int T);	
-	bool otsu_1(GDALDataset * pSrcDatasetR,	GDALDataset * pDrcDatasetR,	Float32 *pRBuf,int T);
+	bool Execute(const string & strOutputBFileName,int T);	
+	bool otsu_1(GDALDataset * pSrcDatasetR,	GDALDataset * pDrcDatasetR,int T);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputRFileName;//输出R文件名

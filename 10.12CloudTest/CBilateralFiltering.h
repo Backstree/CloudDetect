@@ -11,10 +11,12 @@ public:
 	CBilateralFiltering();
 	~CBilateralFiltering();
 	bool Initilization(const string & strInputRFileName);
-	bool Execute(Float32 *pRBuf,const string & strOutputHFileName,int r);	
-	bool BilateralFiltering(GDALDataset * pSrcDatasetR,GDALDataset * pDrcDatasetR,Float32 *pRBuf,Float32 **pDsdBuf,int r);
+	bool Execute(const string & strOutputHFileName,int r);	
+	bool BilateralFiltering(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,int r);
 	double SpatialWeight(int nwidth,int nheight,int row,int col);
 	double ColorWeight(double nwidth,double nheight);
+	void TwoArr2OneArr(Float32 **pBuf,Float32 *pRBuf,int ii,int nHeight,int cc,int nWidth);
+	void OneArr2TwoArr(Float32 *pBuf,Float32 **pRBuf,int ii,int nHeight,int cc,int nWidth);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strOutputHFileName;//输出H文件名

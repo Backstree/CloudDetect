@@ -12,9 +12,8 @@ public:
 	~Compare();
 	bool Initilization(const string & strInputRFileName,
 		const string & strInputGFileName,const string & strInputBFileName);
-	bool Execute(Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,const string & strOutputBFileName,int T);	
-	bool compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,
-		GDALDataset * pDrcDatasetR,	Float32 *pRBuf,Float32 *pGBuf,Float32 *pBBuf,int T);
+	bool Execute(const string & strOutputBFileName,int T);	
+	bool compare(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pSrcDatasetB,GDALDataset * pDrcDatasetR,int T);
 protected:
 	string m_strInputRFileName;//输入R文件名
 	string m_strInputGFileName;//输入G文件名

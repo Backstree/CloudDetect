@@ -41,7 +41,7 @@ bool Compare_IR::Initilization(const string & strInputRFileName, const string & 
 	return true;
 }
 //Ö´ÐÐ
-bool Compare_IR::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputRFileName)
+bool Compare_IR::Execute(const string & strOutputRFileName)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -92,7 +92,7 @@ bool Compare_IR::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputR
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
 
-	if (false==compare_IR(pSrcDatasetR,pSrcDatasetG,pDstDatsetR,pRBuf, pGBuf))
+	if (false==compare_IR(pSrcDatasetR,pSrcDatasetG,pDstDatsetR))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -115,8 +115,7 @@ bool Compare_IR::Execute(Float32 *pRBuf,Float32 *pGBuf,const string & strOutputR
 }
 
 //ÖØÐÂÅÅÐòRGB
-bool Compare_IR::compare_IR(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,
-							GDALDataset * pDrcDatasetR,	Float32 *pRBuf,Float32 *pGBuf)
+bool Compare_IR::compare_IR(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDatasetG,GDALDataset * pDrcDatasetR)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -143,8 +142,8 @@ bool Compare_IR::compare_IR(GDALDataset * pSrcDatasetR,GDALDataset * pSrcDataset
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
-	pGBuf = new Float32[nBlockSize]; 
+	Float32* pRBuf = new Float32[nBlockSize]; 
+	Float32* pGBuf = new Float32[nBlockSize]; 
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)

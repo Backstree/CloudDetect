@@ -35,7 +35,7 @@ bool Otsu_1::Initilization(const string & strInputRFileName)
 	return true;
 }
 //执行
-bool Otsu_1::Execute(Float32 *pRBuf,const string & strOutputRFileName,int T)
+bool Otsu_1::Execute(const string & strOutputRFileName,int T)
 {
 	if (strOutputRFileName.empty())
 	{
@@ -81,7 +81,7 @@ bool Otsu_1::Execute(Float32 *pRBuf,const string & strOutputRFileName,int T)
 	pDstDatsetR->SetProjection(pszSRS_WKT);
 	pDstDatsetR->SetMetadata(pDstDatsetR->GetMetadata());
 
-	if (false==otsu_1(pSrcDatasetR,pDstDatsetR,pRBuf,T))
+	if (false==otsu_1(pSrcDatasetR,pDstDatsetR,T))
 	{
 		GDALClose(pSrcDatasetR);
 		pSrcDatasetR = 0;
@@ -100,7 +100,7 @@ bool Otsu_1::Execute(Float32 *pRBuf,const string & strOutputRFileName,int T)
 }
 
 //重新排序RGB
-bool Otsu_1::otsu_1(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,	Float32 *pRBuf,int T)
+bool Otsu_1::otsu_1(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,int T)
 {
 	int nWidth,nHeight;
 	nWidth = pSrcDatasetR->GetRasterXSize();
@@ -126,7 +126,7 @@ bool Otsu_1::otsu_1(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,	Floa
 	int nXBlocks = (nWidth + nXBlockSize - 1)/nXBlockSize;
 	int nYBlocks = (nHeight + nYBlockSize - 1)/nYBlockSize;
 	long int nBlockSize = nXBlockSize * nYBlockSize;
-	pRBuf = new Float32[nBlockSize]; 
+	Float32* pRBuf = new Float32[nBlockSize]; 
 	Float32 *pDRBuf = new Float32[nBlockSize]; 
 
 	for (iYBlock=0; iYBlock<nYBlocks; iYBlock++)
@@ -169,7 +169,7 @@ bool Otsu_1::otsu_1(GDALDataset * pSrcDatasetR, GDALDataset * pDrcDatasetR,	Floa
 				//计算值
 				//-------------------------------------------------------->
 				///////////////////////////////////////////////////////////
-				pDRBuf[i]=pRBuf[i]>=T?pRBuf[i]:0;
+				pDRBuf[i]=pRBuf[i]<=T?pRBuf[i]:0;
 				
 			}
 
